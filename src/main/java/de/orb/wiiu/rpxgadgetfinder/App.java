@@ -119,9 +119,12 @@ public class App {
         }
 
         for (val s : exportSymbols) {
-            exports.stream().filter(e -> e.name().equals(s.getName())).findAny().ifPresentOrElse(cur -> {
-                System.out.println(String.format("%s = 0x%08X;", s.getOut(), cur.offset() + totalOffset));
-            }, () -> System.err.println(String.format("Not found %s", s.toString())));
+            val opt = exports.stream().filter(e -> e.name().equals(s.getName())).findAny();
+            if(opt.isPresent()) {
+                System.out.println(String.format("%s = 0x%08X;", s.getOut(), opt.get().offset() + totalOffset));
+            }else {
+                System.err.println(String.format("Not found %s", s.toString()));
+            }
         }
     }
     
